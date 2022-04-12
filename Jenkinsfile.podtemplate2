@@ -1,7 +1,7 @@
 podTemplate(
   label: 'arm-pod', 
   containers: [
-    containerTemplate(name: 'docker', image: 'ezkrg/buildx:v0.8.1', command: 'RUN --network=none ip a', ttyEnabled: true), 
+    containerTemplate(name: 'docker', image: 'ezkrg/buildx:v0.8.1', command: 'RUN --network=none ip a', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'public.ecr.aws/smartlog/roffe/kubectl:v1.13.2', command: 'cat', ttyEnabled: true), 
     containerTemplate(name: 'awscli', image: 'public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190', command: 'cat', ttyEnabled: true), 
   ], 
@@ -26,7 +26,9 @@ podTemplate(
       //   echo 'Khong phai branch (stage|production) nen ko lam gi'
       //   error('Failed to build')
       // }
+      
       build2()
+    
     } catch (exc) {
       currentBuild.result = 'FAILURE'
       echo 'I failed'
@@ -101,16 +103,16 @@ def build2() {
       """
     }
   }
-  stage('Deploy k8s') {
-    container('kubectl') {
-      for (deployEnv in deployEnvs) {
-        sh """
-          kubectl apply -f deploy.${deployEnv}.yml
-          kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
-          kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
-        """
-      }
-    }
-  }
+  // stage('Deploy k8s') {
+  //   container('kubectl') {
+  //     for (deployEnv in deployEnvs) {
+  //       sh """
+  //         kubectl apply -f deploy.${deployEnv}.yml
+  //         kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
+  //         kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
+  //       """
+  //     }
+  //   }
+  // }
   currentBuild.result = 'SUCCESS'
 }
