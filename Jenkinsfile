@@ -8,16 +8,16 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
             }
         }
+        stage('Build') {
+            steps {
+                echo 'Running docker build -t sntshk/cotu:latest .'
+                sh 'docker build -t sntshk/cotu:latest .'
+            }
+        }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                echo 'Running pytest..'
-            }
-        }
-        stage('Build') {
-            steps {
-                echo 'Building..'
-                echo 'Running docker build -t sntshk/cotu .'
+                sh 'docker run --rm -e CI=true sntshk/cotu pytest'
             }
         }
         stage('Publish') {
@@ -28,8 +28,9 @@ pipeline {
         }
         stage('Cleanup') {
             steps {
-                echo 'Cleaning..'
-                echo 'Running docker rmi..'
+                echo 'Removing unused docker images..'
+                // keep intermediate images as cache, only delete the final image
+                sh 'docker images -q | xargs --no-run-if-empty docker rmi'
             }
         }
     }
