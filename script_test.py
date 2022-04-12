@@ -1,7 +1,7 @@
-import script_test
+import cotu
 
 def test_hello_world(capsys):
-    script_test.hello_world()
+    cotu.hello_world()
     out, err = capsys.readouterr()
 
     assert out == 'hello world\n'
