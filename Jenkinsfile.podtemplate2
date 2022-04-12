@@ -34,7 +34,8 @@ podTemplate(
     } finally {
       echo 'One way or another, I have finished'
 
-      deleteDir() /* clean up our workspace */ if (currentBuild.result == 'SUCCESS') {
+      deleteDir() /* clean up our workspace */
+      if (currentBuild.result == 'SUCCESS') {
         echo 'Build successful'
         // slackSend channel: SLACK_CHANNEL, color: 'good', message: "The pipeline ${currentBuild.fullDisplayName} [${commitMessage}] completed successfully."
       } else if (currentBuild.result == 'FAILURE') {
