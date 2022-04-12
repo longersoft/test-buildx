@@ -1,104 +1,43 @@
-podTemplate(label: 'arm-pod', containers: [containerTemplate(name: 'docker', image: 'ezkrg/buildx:v0.8.1', command: 'RUN --network=none ip a', ttyEnabled: true), containerTemplate(name: 'kubectl', image: 'public.ecr.aws/smartlog/roffe/kubectl:v1.13.2', command: 'cat', ttyEnabled: true), containerTemplate(name: 'awscli', image: 'public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190', command: 'cat', ttyEnabled: true), ], volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), ]) {
-  node('arm-pod') {
-    SLACK_CHANNEL = 'GUCB1RHAT' // cma-no-bosscommitMessage = ""
-    try {
-      stage('Get source code') {
-        echo 'Getting source code...'
-        checkout scmString[] parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n') commitMessage = parts[0]
+pipeline {
+  environment {
+    imageName = "test-buildx/test-image"
+    registryCredential = ''
+    dockerImage = ''
+  }
+  
+  agent any
+  
+  stages {
+    // stage('Cloning Git') {
+    //   steps {
+    //     git([url: 'https://github.com/ismailyenigul/hacicenkins.git', branch: 'master', credentialsId: 'ismailyenigul-github-user-token'])
+    //   }
+    // }
+  
+    stage('Building image') {
+      steps {
+        script {
+          dockerImage = docker.build imageName
+        }
       }
-      if (env.BRANCH_NAME == 'hung') {
-        envName = 'stage'
-        deployEnvs = ['stage'] build2()
-      } else if (env.BRANCH_NAME == 'production') {
-        envName = 'prod'
-        deployEnvs = ['vnpost-prod'] build()
-      } else {
-        echo 'Khong phai branch (stage|production) nen ko lam gi'
-        error('Failed to build')
-      }
-    } catch (exc) {
-      currentBuild.result = 'FAILURE'
-      echo 'I failed'
-      echo exc.getMessage()
-    } finally {
-      echo 'One way or another, I have finished'
+    }
 
-      deleteDir() /* clean up our workspace */ if (currentBuild.result == 'SUCCESS') {
-        echo 'Build successful'
-        slackSend channel: SLACK_CHANNEL, color: 'good', message: "The pipeline ${currentBuild.fullDisplayName} [${commitMessage}] completed successfully."
-      } else if (currentBuild.result == 'FAILURE') {
-        echo 'I failed :('
-        slackSend channel: SLACK_CHANNEL, color: '#c40e0e', message: "Attention @here ${env.JOB_NAME} #${env.BUILD_NUMBER} [${commitMessage}] has failed."
-      }
-    }
-  }
-}
+    // stage('Deploy Image') {
+    //   steps {
+    //     script {
+    //       docker.withRegistry( '', registryCredential ) {
+    //         dockerImage.push("$BUILD_NUMBER")
+    //         dockerImage.push('latest')
+    //       }
+    //     }
+    //   }
+    // }
 
-def build() {
-  echo "Process build for ${env.BRANCH_NAME} branch"
-  prefixPod = "khoao-be"
-  namespace = "swm"
-  stage('Build docker') {
-    container('awscli') {
-      DOCKER_LOGIN = sh(
-        script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
-        returnStdout: true
-      ).trim()
-    }
-    container('docker') {
-      REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
-      sh """
-        docker build  --network=host -t ${REGISTRY_URL} --pull=true .
-        ${DOCKER_LOGIN}
-        docker push ${REGISTRY_URL}
-      """
-    }
+    // stage('Remove Unused docker image') {
+    //   steps {
+    //     sh "docker rmi $imageName:$BUILD_NUMBER"
+    //     sh "docker rmi $imageName:latest"
+    //   }
+    // }
   }
-  stage('Deploy k8s') {
-    container('kubectl') {
-      for (deployEnv in deployEnvs) {
-        sh """
-          kubectl apply -f deploy.${deployEnv}.yml
-          kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
-          kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
-        """
-      }
-    }
-  }
-  currentBuild.result = 'SUCCESS'
-}
-
-def build2() {
-  echo "Process build for ${env.BRANCH_NAME} branch"
-  prefixPod = "khoao-be"
-  namespace = "swm"
-  stage('Build docker') {
-    container('awscli') {
-      DOCKER_LOGIN = sh(
-        script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
-        returnStdout: true
-      ).trim()
-    }
-    container('docker') {
-      REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
-      sh """
-        ${DOCKER_LOGIN}
-        docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
-        docker buildx inspect--bootstrap
-        docker buildx build --network host --platform linux/amd64,linux/arm64  -t ${REGISTRY_URL} --allow network.host  --push --pull=true .
-      """
-    }
-  }
-  stage('Deploy k8s') {
-    container('kubectl') {
-      for (deployEnv in deployEnvs) {
-        sh """
-          kubectl apply -f deploy.${deployEnv}.yml
-          kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
-          kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
-        """
-      }
-    }
-  }
-  currentBuild.result = 'SUCCESS'
 }
