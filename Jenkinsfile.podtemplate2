@@ -96,6 +96,12 @@ def build2() {
   echo "Process build for ${env.BRANCH_NAME} branch"
   prefixPod = "khoao-be"
   namespace = "swm"
+  
+  environment {
+    DOCKER_ID = credentials('DOCKER_ID')
+    DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+  }
+
   stage('Build docker') {
     container('awscli') {
       DOCKER_LOGIN = sh(
@@ -104,9 +110,13 @@ def build2() {
       ).trim()
     }
     container('docker') {
-      REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
+      // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
+      REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
+      
+      sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
+
       sh """
-        ${DOCKER_LOGIN}
+        #${DOCKER_LOGIN}
         docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
         #docker buildx create --driver docker-container --use
         docker buildx inspect --bootstrap
