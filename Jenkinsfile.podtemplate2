@@ -107,9 +107,10 @@ def build2() {
       REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
       sh """
         ${DOCKER_LOGIN}
-        docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
-        docker buildx inspect--bootstrap
-        docker buildx build --network host --platform linux/amd64,linux/arm64  -t ${REGISTRY_URL} --allow network.host  --push --pull=true .
+        # docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
+        docker buildx create --use --name multiarch
+        docker buildx inspect --bootstrap
+        docker buildx build --network host --platform linux/amd64,linux/arm64  -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
       """
     }
   }
