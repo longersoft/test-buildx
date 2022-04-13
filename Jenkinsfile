@@ -1,6 +1,13 @@
 pipeline {
   agent any
 
+  // agent {
+  //   // Use docker container
+  //   docker {
+  //     image 'ruby:2.3'
+  //   }
+  // }
+
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')

@@ -10,21 +10,21 @@ podTemplate(
   node('arm-pod') {
     SLACK_CHANNEL = 'GUCB1RHAT' // cma-no-bosscommitMessage = ""
     try {
-      stage('Cloning Git') {
-        environment { 
-          BRANCH_NAME='main'
-        }
-        steps {
-          git([url: 'https://github.com/longersoft/test-buildx.git', branch: 'main'])
-        }
-      }
-      
-      // stage('Get source code') {
-      //   echo 'Getting source code...'
-      //   checkout scmString[]
-      //   parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n')
-      //   commitMessage = parts[0]
+      // stage('Cloning Git') {
+      //   environment { 
+      //     BRANCH_NAME='main'
+      //   }
+      //   steps {
+      //     git([url: 'https://github.com/longersoft/test-buildx.git', branch: 'main'])
+      //   }
       // }
+
+      stage('Get source code') {
+        echo 'Getting source code...'
+        checkout scm
+        parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n')
+        commitMessage = parts[0]
+      }
       // if (env.BRANCH_NAME == 'hung') {
       //   envName = 'stage'
       //   deployEnvs = ['stage'] build2()
@@ -46,7 +46,7 @@ podTemplate(
     } finally {
       echo 'One way or another, I have finished'
 
-      deleteDir() /* clean up our workspace */
+      // deleteDir() /* clean up our workspace */
       if (currentBuild.result == 'SUCCESS') {
         echo 'Build successful'
         // slackSend channel: SLACK_CHANNEL, color: 'good', message: "The pipeline ${currentBuild.fullDisplayName} [${commitMessage}] completed successfully."
