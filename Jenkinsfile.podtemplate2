@@ -104,16 +104,14 @@ def build2() {
         returnStdout: true
       ).trim()
     }
-    stage ('Transfer release images to registry') {
-       withCredentials([usernamePassword(credentialsId: 'private-artifactory', passwordVariable: 'dockerKey', usernameVariable: 'dockerUser')]) {
-            // avoid using credentials in groovy string interpolation
-            sh label: 'Login to docker registry', script: '''
-docker login --username $dockerUser --password $dockerKey ''' + my-artifactory.intranet
- 
-            // do something while being logged in
-            sh label: 'Logout from docker registry', script: '''
-                docker logout my-artifactory.intranet
-            '''
+    withCredentials([usernamePassword(credentialsId: 'private-artifactory', passwordVariable: 'dockerKey', usernameVariable: 'dockerUser')]) {
+      // avoid using credentials in groovy string interpolation
+      sh label: 'Login to docker registry', script: '''docker login --username $dockerUser --password $dockerKey ''' + my-artifactory.intranet
+
+      // do something while being logged in
+      sh label: 'Logout from docker registry', script: '''
+        docker logout my-artifactory.intranet
+      '''
     }
     container('docker') {
       // DOCKER_ID = credentials('DOCKER_ID')
@@ -125,7 +123,7 @@ docker login --username $dockerUser --password $dockerKey ''' + my-artifactory.i
       withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
       }
-      
+
       sh """
         #${DOCKER_LOGIN}
         docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
