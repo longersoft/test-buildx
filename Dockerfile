@@ -7,4 +7,3 @@ RUN pip3 install pytest
 COPY . .
 
 CMD [ "python3", "cotu.py"]
-x
