@@ -25,7 +25,7 @@ pipeline {
         sh """
           docker run \
             -v "$HOME"/.config/gcloud:/root/.config/gcloud \
-            -v ${PWD}/reactjs:/workspace \
+            -v ./reactjs:/workspace \
             gcr.io/kaniko-project/executor:latest \
             --dockerfile /workspace/Dockerfile \
             --destination "$DOCKER_ID/cotu-kaniko:latest" \
