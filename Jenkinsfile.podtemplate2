@@ -110,8 +110,7 @@ def build2() {
       // DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
 
       // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
-      REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
-
+      
       // withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
       //   sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
       // }
@@ -123,6 +122,8 @@ def build2() {
             passwordVariable: 'password')
         ]) {
           print 'username=' + username + 'password=' + password
+          DOCKER_ID=username
+          REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
 
           sh 'echo $password | docker login -u $username --password-stdin'
         }
