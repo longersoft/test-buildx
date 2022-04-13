@@ -2,10 +2,7 @@ pipeline {
   // agent any
 
   agent {
-    // Use docker container
-    docker {
-      image 'ezkrg/buildx:v0.8.1'
-    }
+    docker { image 'docker:stable' }
   }
 
   environment {
