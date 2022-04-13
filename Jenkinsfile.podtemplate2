@@ -108,7 +108,7 @@ def build2() {
       steps {
         script {
           withCredentials([
-            usernamePassword(credentialsId: 'gitlab',
+            usernamePassword(credentialsId: 'private-artifactory',
               usernameVariable: 'username',
               passwordVariable: 'password')
           ]) {
@@ -116,6 +116,8 @@ def build2() {
 
             print 'username.collect { it }=' + username.collect { it }
             print 'password.collect { it }=' + password.collect { it }
+
+            sh 'echo $password | docker login -u $username --password-stdin'
           }
         }
       }
@@ -127,9 +129,9 @@ def build2() {
       // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
       REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
 
-      withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
-        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
-      }
+      // withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
+      //   sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
+      // }
 
       sh """
         #${DOCKER_LOGIN}
