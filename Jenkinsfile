@@ -1,9 +1,9 @@
 pipeline {
-  // agent any
+  agent any
 
-  agent {
-    docker { image 'docker:stable' }
-  }
+  // agent {
+  //   docker { image 'docker:stable' }
+  // }
 
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
