@@ -8,36 +8,16 @@ podTemplate(
   volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), ]
 ) {
   node('arm-pod') {
-    SLACK_CHANNEL = 'GUCB1RHAT' // cma-no-bosscommitMessage = ""
     try {
-      // stage('Cloning Git') {
-      //   environment { 
-      //     BRANCH_NAME='main'
-      //   }
-      //   steps {
-      //     git([url: 'https://github.com/longersoft/test-buildx.git', branch: 'main'])
-      //   }
-      // }
-
       stage('Get source code') {
         echo 'Getting source code...'
         checkout scm
         parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n')
         commitMessage = parts[0]
       }
-      // if (env.BRANCH_NAME == 'hung') {
-      //   envName = 'stage'
-      //   deployEnvs = ['stage'] build2()
-      // } else if (env.BRANCH_NAME == 'production') {
-      //   envName = 'prod'
-      //   deployEnvs = ['vnpost-prod'] build()
-      // } else {
-      //   echo 'Khong phai branch (stage|production) nen ko lam gi'
-      //   error('Failed to build')
-      // }
       
       envName = 'stage'
-      build2()
+      build()
     
     } catch (exc) {
       currentBuild.result = 'FAILURE'
@@ -45,54 +25,16 @@ podTemplate(
       echo exc.getMessage()
     } finally {
       echo 'One way or another, I have finished'
-
-      // deleteDir() /* clean up our workspace */
       if (currentBuild.result == 'SUCCESS') {
         echo 'Build successful'
-        // slackSend channel: SLACK_CHANNEL, color: 'good', message: "The pipeline ${currentBuild.fullDisplayName} [${commitMessage}] completed successfully."
       } else if (currentBuild.result == 'FAILURE') {
         echo 'I failed :('
-        // slackSend channel: SLACK_CHANNEL, color: '#c40e0e', message: "Attention @here ${env.JOB_NAME} #${env.BUILD_NUMBER} [${commitMessage}] has failed."
       }
     }
   }
 }
 
-// def build() {
-//   echo "Process build for ${env.BRANCH_NAME} branch"
-//   prefixPod = "khoao-be"
-//   namespace = "swm"
-//   stage('Build docker') {
-//     container('awscli') {
-//       DOCKER_LOGIN = sh(
-//         script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
-//         returnStdout: true
-//       ).trim()
-//     }
-//     container('docker') {
-//       REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
-//       sh """
-//         docker build  --network=host -t ${REGISTRY_URL} --pull=true .
-//         ${DOCKER_LOGIN}
-//         docker push ${REGISTRY_URL}
-//       """
-//     }
-//   }
-//   stage('Deploy k8s') {
-//     container('kubectl') {
-//       for (deployEnv in deployEnvs) {
-//         sh """
-//           kubectl apply -f deploy.${deployEnv}.yml
-//           kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
-//           kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
-//         """
-//       }
-//     }
-//   }
-//   currentBuild.result = 'SUCCESS'
-// }
-
-def build2() {
+def build() {
   echo "Process build for ${env.BRANCH_NAME} branch"
   prefixPod = "khoao-be"
   namespace = "swm"
@@ -106,15 +48,8 @@ def build2() {
     // }
 
     container('docker') {
-      // DOCKER_ID = credentials('DOCKER_ID')
-      // DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
-
       // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
       
-      // withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
-      //   sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
-      // }
-
       script {
         withCredentials([
           usernamePassword(credentialsId: 'private-artifactory',
@@ -136,16 +71,4 @@ def build2() {
       }
     }
   }
-  // stage('Deploy k8s') {
-  //   container('kubectl') {
-  //     for (deployEnv in deployEnvs) {
-  //       sh """
-  //         kubectl apply -f deploy.${deployEnv}.yml
-  //         kubectl patch deployment ${prefixPod}-${deployEnv} -p "{\\\"spec\\\":{\\\"template\\\":{\\\"metadata\\\":{\\\"labels\\\":{\\\"date\\\":\\\"`date +'%s'`\\\"}}}}}" -n ${namespace}
-  //         kubectl rollout status deployment ${prefixPod}-${deployEnv} -n ${namespace}
-  //       """
-  //     }
-  //   }
-  // }
-  currentBuild.result = 'SUCCESS'
 }
