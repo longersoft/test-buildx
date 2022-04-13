@@ -1,7 +1,7 @@
 podTemplate(
   label: 'arm-pod', 
   containers: [
-    containerTemplate(name: 'docker', image: 'docker/buildx-bin', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'docker', image: 'jonoh/docker-buildx-qemu', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'public.ecr.aws/smartlog/roffe/kubectl:v1.13.2', command: 'cat', ttyEnabled: true), 
     containerTemplate(name: 'awscli', image: 'public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190', command: 'cat', ttyEnabled: true), 
   ], 
@@ -108,9 +108,10 @@ def build2() {
       sh """
         ${DOCKER_LOGIN}
         docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
-        #docker buildx create --use --name multiarch
+        docker buildx create --driver docker-container --use
         docker buildx inspect --bootstrap
-        docker buildx build --network host --platform linux/amd64,linux/arm64 -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
+        update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+        docker buildx build --network host --platform linux/amd64,linux/arm64,local -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
       """
     }
   }
