@@ -25,7 +25,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building image..'
-        sh 'docker build -t $DOCKER_ID/cotu:latest .'
+        sh 'docker buildx build -t $DOCKER_ID/cotu:latest .'
       }
     }
     stage('Test') {
@@ -42,9 +42,7 @@ pipeline {
       }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
-        sh 'docker buildx create --use --name multiarch'
-        sh 'docker buildx inspect --bootstrap'
-        sh 'docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest .'
+        sh 'docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest .'
       }
     }
     stage('Cleanup') {

@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM --platform=$TARGETPLATFORM python:3.7
 
 WORKDIR /app
 
