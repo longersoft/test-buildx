@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  // agent any
 
   agent {
     // Use docker container
