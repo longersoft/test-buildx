@@ -27,6 +27,7 @@ podTemplate(
       //   error('Failed to build')
       // }
       
+      envName = 'stage'
       build2()
     
     } catch (exc) {
