@@ -22,6 +22,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building image..'
+        echo $pwd
         sh """
           docker run \
             -v "$HOME"/.config/gcloud:/root/.config/gcloud \
