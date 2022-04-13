@@ -1,12 +1,12 @@
 pipeline {
   agent any
 
-  // agent {
-  //   // Use docker container
-  //   docker {
-  //     image 'ruby:2.3'
-  //   }
-  // }
+  agent {
+    // Use docker container
+    docker {
+      image 'ezkrg/buildx:v0.8.1'
+    }
+  }
 
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
