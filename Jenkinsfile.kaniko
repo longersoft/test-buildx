@@ -28,9 +28,9 @@ pipeline {
         sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
         sh """
           docker run \
-            -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace/ \
+            -v /var/jenkins_home/workspace/long-test-kaniko/:/workspace/reactjs/ \
             gcr.io/kaniko-project/executor:latest \
-            --dockerfile /workspace/Dockerfile \
+            --dockerfile /workspace/reactjs/Dockerfile \
             --destination "$DOCKER_ID/cotu-kaniko:latest" \
             --context dir:///workspace/
         """
