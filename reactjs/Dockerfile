@@ -20,5 +20,6 @@ FROM alpine
 
 RUN echo "Hello, my CPU architecture is $(uname -m)"
 
+RUN apk add curl
 RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
 RUN ls -la
