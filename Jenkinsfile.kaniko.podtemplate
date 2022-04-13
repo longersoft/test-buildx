@@ -63,7 +63,7 @@ def build() {
           sh """
             docker run \
               -v "$HOME"/.config/gcloud:/root/.config/gcloud \
-              -v $(pwd)/reactjs:/workspace \
+              -v /var/jenkins_home/workspace/long-test-kaniko/reactjs:/workspace \
               gcr.io/kaniko-project/executor:latest \
               --dockerfile /workspace/Dockerfile \
               --destination "${REGISTRY_URL}" \
