@@ -1,0 +1,366 @@
+Started by user Minh Le
+Obtained Jenkinsfile.podtemplate2 from git https://github.com/longersoft/test-buildx.git
+[Pipeline] Start of Pipeline
+[Pipeline] podTemplate
+[Pipeline] {
+[Pipeline] node
+Created Pod: kubernetes jenkins/arm-pod-sp6tw-3rwnm
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Scheduled] Successfully assigned jenkins/arm-pod-sp6tw-3rwnm to ip-10-2-20-197.ap-southeast-1.compute.internal
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Pulled] Container image "public.ecr.aws/smartlog/roffe/kubectl:v1.13.2" already present on machine
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Created] Created container kubectl
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Started] Started container kubectl
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Pulled] Container image "public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190" already present on machine
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Created] Created container awscli
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Started] Started container awscli
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Pulled] Container image "jonoh/docker-buildx-qemu" already present on machine
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Created] Created container docker
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Started] Started container docker
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Pulled] Container image "jenkins/inbound-agent:4.11-1-jdk11" already present on machine
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Created] Created container jnlp
+[Normal][jenkins/arm-pod-sp6tw-3rwnm][Started] Started container jnlp
+Agent arm-pod-sp6tw-3rwnm is provisioned from template arm-pod-sp6tw
+---
+apiVersion: "v1"
+kind: "Pod"
+metadata:
+  annotations:
+    buildUrl: "http://jenkins.jenkins.svc.cluster.local:8080/job/longvu-test-buildx/36/"
+    runUrl: "job/longvu-test-buildx/36/"
+  labels:
+    jenkins/jenkins-jenkins-agent: "true"
+    jenkins/label-digest: "1b53fd941298939ba8dc5e0756840e18613f21fe"
+    jenkins/label: "arm-pod"
+  name: "arm-pod-sp6tw-3rwnm"
+spec:
+  containers:
+  - command:
+    - "cat"
+    image: "public.ecr.aws/smartlog/roffe/kubectl:v1.13.2"
+    imagePullPolicy: "IfNotPresent"
+    name: "kubectl"
+    resources:
+      limits: {}
+      requests: {}
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  - command:
+    - "cat"
+    image: "public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190"
+    imagePullPolicy: "IfNotPresent"
+    name: "awscli"
+    resources:
+      limits: {}
+      requests: {}
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  - command:
+    - "cat"
+    image: "jonoh/docker-buildx-qemu"
+    imagePullPolicy: "IfNotPresent"
+    name: "docker"
+    resources:
+      limits: {}
+      requests: {}
+    tty: true
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  - env:
+    - name: "JENKINS_SECRET"
+      value: "********"
+    - name: "JENKINS_TUNNEL"
+      value: "jenkins-agent.jenkins.svc.cluster.local:50000"
+    - name: "JENKINS_AGENT_NAME"
+      value: "arm-pod-sp6tw-3rwnm"
+    - name: "JENKINS_NAME"
+      value: "arm-pod-sp6tw-3rwnm"
+    - name: "JENKINS_AGENT_WORKDIR"
+      value: "/home/jenkins/agent"
+    - name: "JENKINS_URL"
+      value: "http://jenkins.jenkins.svc.cluster.local:8080/"
+    image: "jenkins/inbound-agent:4.11-1-jdk11"
+    name: "jnlp"
+    resources:
+      limits: {}
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+    volumeMounts:
+    - mountPath: "/var/run/docker.sock"
+      name: "volume-0"
+      readOnly: false
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+  nodeSelector:
+    kubernetes.io/os: "linux"
+  restartPolicy: "Never"
+  volumes:
+  - hostPath:
+      path: "/var/run/docker.sock"
+    name: "volume-0"
+  - emptyDir:
+      medium: ""
+    name: "workspace-volume"
+
+Running on arm-pod-sp6tw-3rwnm in /home/jenkins/agent/workspace/longvu-test-buildx
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Get source code)
+[Pipeline] echo
+Getting source code...
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/longersoft/test-buildx.git
+ > git init /home/jenkins/agent/workspace/longvu-test-buildx # timeout=10
+Fetching upstream changes from https://github.com/longersoft/test-buildx.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.30.2'
+ > git fetch --tags --force --progress -- https://github.com/longersoft/test-buildx.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision a37fef5cf6eca35309725f89bfbc762a6b0b329c (refs/remotes/origin/main)
+ > git config remote.origin.url https://github.com/longersoft/test-buildx.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f a37fef5cf6eca35309725f89bfbc762a6b0b329c # timeout=10
+Commit message: "test"
+ > git rev-list --no-walk 1f078d7a84a738dccf227f278c09e39d2a0304f7 # timeout=10
+[Pipeline] sh
++ git log -1 --pretty=%B
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] echo
+Process build for null branch
+[Pipeline] stage
+[Pipeline] { (Build docker)
+[Pipeline] container
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $password
+[Pipeline] {
+[Pipeline] echo
+username=longersoftpassword=****
+[Pipeline] sh
++ echo ****
++ docker login -u longersoft --password-stdin
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] sh
++ docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags --allow-insecure-entitlement network.host
+mybuilder
++ docker buildx inspect --bootstrap
+Name:   mybuilder
+Driver: docker-container
+
+Nodes:
+Name:      mybuilder0
+Endpoint:  unix:///var/run/docker.sock
+Status:    running
+Flags:     --allow-insecure-entitlement network.host
+Platforms: linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/amd64/v4, linux/386
++ docker buildx build --network host --platform linux/amd64,linux/arm64 -t longersoft/test-buildx:latest --allow network.host --push --pull=true -f reactjs/Dockerfile .
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 648B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
+#3 ...
+
+#4 [auth] library/alpine:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#5 [linux/amd64 internal] load metadata for docker.io/library/alpine:latest
+#5 DONE 2.3s
+
+#3 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 2.3s
+
+#6 [linux/arm64 1/5] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#6 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.1s done
+#6 DONE 0.1s
+
+#7 [linux/arm64 2/5] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#7 CACHED
+
+#8 [linux/amd64 1/5] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#8 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.1s done
+#8 DONE 0.1s
+
+#9 [linux/amd64 2/5] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#9 CACHED
+
+#10 [linux/amd64 3/5] RUN apk add curl
+#10 0.086 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86_64/APKINDEX.tar.gz
+#10 0.234 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.gz
+#10 0.449 (1/5) Installing ca-certificates (20211220-r0)
+#10 0.462 (2/5) Installing brotli-libs (1.0.9-r5)
+#10 0.474 (3/5) Installing nghttp2-libs (1.46.0-r0)
+#10 0.481 (4/5) Installing libcurl (7.80.0-r0)
+#10 0.490 (5/5) Installing curl (7.80.0-r0)
+#10 0.496 Executing busybox-1.34.1-r5.trigger
+#10 0.499 Executing ca-certificates-20211220-r0.trigger
+#10 0.529 OK: 8 MiB in 19 packages
+#10 DONE 0.7s
+
+#11 [linux/amd64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#11 0.134   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#11 0.134                                  Dload  Upload   Total   Spent    Left  Speed
+#11 0.134 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0 7504k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  2 7504k    2  212k    0     0   138k      0  0:00:54  0:00:01  0:00:53  138k
+#11 ...
+
+#12 [linux/arm64 3/5] RUN apk add curl
+#0 0.153 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/aarch64/APKINDEX.tar.gz
+#0 0.872 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/aarch64/APKINDEX.tar.gz
+#0 2.092 (1/5) Installing ca-certificates (20211220-r0)
+#0 2.129 (2/5) Installing brotli-libs (1.0.9-r5)
+#0 2.187 (3/5) Installing nghttp2-libs (1.46.0-r0)
+#0 2.212 (4/5) Installing libcurl (7.80.0-r0)
+#0 2.240 (5/5) Installing curl (7.80.0-r0)
+#0 2.258 Executing busybox-1.34.1-r5.trigger
+#0 2.303 Executing ca-certificates-20211220-r0.trigger
+#0 2.306 Error while loading �|��|��׬//var/cache/misc/ca-certificates-20211220-r0.trigger: No such file or directory
+#0 2.307 ERROR: ca-certificates-20211220-r0.trigger: script exited with error 1
+#0 2.312 OK: 8 MiB in 19 packages
+#12 DONE 2.5s
+
+#13 [linux/arm64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#13 0.174   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#13 0.182                                  Dload  Upload   Total   Spent    Left  Speed
+#13 0.182 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0 7504k    0 20320    0     0  25710      0  0:04:58 --:--:--  0:04:58 27021
+#13 ...
+
+#11 [linux/amd64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#11 0.134 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0 7504k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  2 7504k    2  212k    0     0   138k      0  0:00:54  0:00:01  0:00:53  138k
+ 40 7504k   40 3018k    0     0  1202k      0  0:00:06  0:00:02  0:00:04 1202k
+100 7504k  100 7504k    0     0  2316k      0  0:00:03  0:00:03 --:--:-- 2316k
+#11 DONE 3.4s
+
+#14 [linux/amd64 5/5] RUN ls -la
+#0 0.099 total 7516
+#0 0.099 drwxr-xr-x    1 root     root            17 Apr 13 10:01 .
+#0 0.099 drwxr-xr-x    1 root     root            17 Apr 13 10:01 ..
+#0 0.099 -rw-r--r--    1 root     root       7684915 Apr 13 10:01 babynames.zip
+#0 0.099 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 bin
+#0 0.099 drwxr-xr-x    5 root     root           340 Apr 13 10:01 dev
+#0 0.099 drwxr-xr-x    1 root     root            25 Apr 13 10:01 etc
+#0 0.099 drwxr-xr-x    2 root     root             6 Apr  4 16:06 home
+#0 0.099 drwxr-xr-x    1 root     root            17 Apr  4 16:06 lib
+#0 0.099 drwxr-xr-x    5 root     root            44 Apr  4 16:06 media
+#0 0.099 drwxr-xr-x    2 root     root             6 Apr  4 16:06 mnt
+#0 0.099 drwxr-xr-x    2 root     root             6 Apr  4 16:06 opt
+#0 0.099 dr-xr-xr-x  345 root     root             0 Apr 13 10:01 proc
+#0 0.099 drwx------    2 root     root             6 Apr  4 16:06 root
+#0 0.099 drwxr-xr-x    2 root     root             6 Apr  4 16:06 run
+#0 0.099 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 sbin
+#0 0.099 drwxr-xr-x    2 root     root             6 Apr  4 16:06 srv
+#0 0.099 dr-xr-xr-x   13 root     root             0 Mar 25 00:19 sys
+#0 0.099 drwxrwxrwt    2 root     root             6 Apr  4 16:06 tmp
+#0 0.099 drwxr-xr-x    1 root     root            66 Apr  4 16:06 usr
+#0 0.099 drwxr-xr-x    1 root     root            19 Apr  4 16:06 var
+#14 DONE 0.1s
+
+#13 [linux/arm64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#13 0.182 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0 7504k    0 20320    0     0  25710      0  0:04:58 --:--:--  0:04:58 27021
+  6 7504k    6  453k    0     0   261k      0  0:00:28  0:00:01  0:00:27  266k
+ 88 7504k   88 6646k    0     0  2277k      0  0:00:03  0:00:02  0:00:01 2307k
+100 7504k  100 7504k    0     0  2567k      0  0:00:02  0:00:02 --:--:-- 2601k
+#13 DONE 3.1s
+
+#15 [linux/arm64 5/5] RUN ls -la
+#15 0.130 total 7516
+#15 0.136 drwxr-xr-x    1 root     root            17 Apr 13 10:01 .
+#15 0.136 drwxr-xr-x    1 root     root            17 Apr 13 10:01 ..
+#15 0.136 -rw-r--r--    1 root     root       7684915 Apr 13 10:01 babynames.zip
+#15 0.136 drwxr-xr-x    2 root     root          4096 Apr  4 16:08 bin
+#15 0.136 drwxr-xr-x    5 root     root           360 Apr 13 10:01 dev
+#15 0.136 drwxr-xr-x    1 root     root            25 Apr 13 10:01 etc
+#15 0.136 drwxr-xr-x    2 root     root             6 Apr  4 16:07 home
+#15 0.136 drwxr-xr-x    1 root     root            17 Apr  4 16:07 lib
+#15 0.136 drwxr-xr-x    5 root     root            44 Apr  4 16:07 media
+#15 0.136 drwxr-xr-x    2 root     root             6 Apr  4 16:07 mnt
+#15 0.136 drwxr-xr-x    2 root     root             6 Apr  4 16:07 opt
+#15 0.136 dr-xr-xr-x  343 root     root             0 Apr 13 10:01 proc
+#15 0.136 drwx------    2 root     root             6 Apr  4 16:07 root
+#15 0.136 drwxr-xr-x    2 root     root             6 Apr  4 16:07 run
+#15 0.136 drwxr-xr-x    2 root     root          4096 Apr  4 16:08 sbin
+#15 0.136 drwxr-xr-x    2 root     root             6 Apr  4 16:07 srv
+#15 0.136 dr-xr-xr-x   13 root     root             0 Mar 25 00:19 sys
+#15 0.138 drwxrwxrwt    2 root     root             6 Apr  4 16:07 tmp
+#15 0.138 drwxr-xr-x    1 root     root            66 Apr  4 16:07 usr
+#15 0.138 drwxr-xr-x    1 root     root            19 Apr  4 16:07 var
+#15 DONE 0.2s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.5s done
+#16 exporting manifest sha256:b0d53faba8046cfa1fb55155357053a00f079edfe63edf2cc0515c4dd3d4dc66 done
+#16 exporting config sha256:9a62f8b30827780738f844aa6e146e911138eba208a502b45c282abe6dbde9f3 done
+#16 exporting manifest sha256:35bfb4bc68bdc8e82d79fb50e92dd2c367e5c99def0252f5787d678e272698f4 done
+#16 exporting config sha256:1908be4d9fddb55a0d8555adc677070bd7839ee6d812d4d43247882c880c09c0 done
+#16 exporting manifest list sha256:6642b035e9706f87ecc0093ba47faecc4b586e2174ec50c467d6b113777d5705 done
+#16 pushing layers
+#16 ...
+
+#17 [auth] longersoft/test-buildx:pull,push token for registry-1.docker.io
+#17 DONE 0.0s
+
+#16 exporting to image
+#16 pushing layers 8.7s done
+#16 pushing manifest for docker.io/longersoft/test-buildx:latest@sha256:6642b035e9706f87ecc0093ba47faecc4b586e2174ec50c467d6b113777d5705
+#16 pushing manifest for docker.io/longersoft/test-buildx:latest@sha256:6642b035e9706f87ecc0093ba47faecc4b586e2174ec50c467d6b113777d5705 2.1s done
+#16 DONE 11.3s
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // container
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] echo
+One way or another, I have finished
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // podTemplate
+[Pipeline] End of Pipeline
+Finished: SUCCESS

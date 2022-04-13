@@ -18,11 +18,11 @@ Fetching upstream changes from https://github.com/longersoft/test-buildx.git
  > git --version # 'git version 2.30.2'
  > git fetch --tags --force --progress -- https://github.com/longersoft/test-buildx.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
-Checking out Revision a077473a104dd213e9ca80a4a2434959f549e415 (refs/remotes/origin/main)
+Checking out Revision a37fef5cf6eca35309725f89bfbc762a6b0b329c (refs/remotes/origin/main)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f a077473a104dd213e9ca80a4a2434959f549e415 # timeout=10
+ > git checkout -f a37fef5cf6eca35309725f89bfbc762a6b0b329c # timeout=10
 Commit message: "test"
- > git rev-list --no-walk af4846cd88ca191fab46571820a301505adbc96b # timeout=10
+ > git rev-list --no-walk 1f078d7a84a738dccf227f278c09e39d2a0304f7 # timeout=10
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] withEnv
@@ -35,7 +35,7 @@ Masking supported pattern matches of $DOCKER_ID or $DOCKER_PASSWORD
 [Pipeline] echo
 Initializing..
 [Pipeline] echo
-Running 24 on http://54.191.50.38:8080/
+Running 27 on http://54.191.50.38:8080/
 [Pipeline] echo
 Current branch: null
 [Pipeline] sh
@@ -55,34 +55,70 @@ Building image..
 [Pipeline] sh
 + docker buildx build -t ****/cotu:latest -f reactjs/Dockerfile .
 WARNING: No output specified for docker-container driver. Build result will only remain in the build cache. To push result image into registry use --push or to load image into docker use --load
-#1 [internal] booting buildkit
-#1 starting container buildx_buildkit_multiarch0
-#1 starting container buildx_buildkit_multiarch0 0.6s done
-#1 DONE 0.6s
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 648B done
+#1 DONE 0.0s
 
-#2 [internal] load build definition from Dockerfile
-#2 transferring dockerfile: 537B done
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
 #2 DONE 0.0s
 
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.0s
+#3 [internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 0.4s
 
-#4 [internal] load metadata for docker.io/library/alpine:latest
-#4 ...
+#4 [1/5] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#4 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
+#4 DONE 0.0s
 
-#5 [auth] library/alpine:pull token for registry-1.docker.io
-#5 DONE 0.0s
+#5 [2/5] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#5 CACHED
 
-#4 [internal] load metadata for docker.io/library/alpine:latest
-#4 DONE 1.0s
+#6 [3/5] RUN apk add curl
+#0 0.088 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86_64/APKINDEX.tar.gz
+#6 0.219 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.gz
+#6 0.469 (1/5) Installing ca-certificates (20211220-r0)
+#6 0.489 (2/5) Installing brotli-libs (1.0.9-r5)
+#6 0.505 (3/5) Installing nghttp2-libs (1.46.0-r0)
+#6 0.514 (4/5) Installing libcurl (7.80.0-r0)
+#6 0.529 (5/5) Installing curl (7.80.0-r0)
+#6 0.540 Executing busybox-1.34.1-r5.trigger
+#6 0.544 Executing ca-certificates-20211220-r0.trigger
+#6 0.581 OK: 8 MiB in 19 packages
+#6 DONE 0.7s
 
-#6 [1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
-#6 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
-#6 DONE 0.0s
+#7 [4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#7 0.090   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#7 0.090                                  Dload  Upload   Total   Spent    Left  Speed
+#7 0.091 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  3 7504k    3  256k    0     0   531k      0  0:00:14 --:--:--  0:00:14  531k
+ 63 7504k   63 4775k    0     0  3287k      0  0:00:02  0:00:01  0:00:01 3286k
+100 7504k  100 7504k    0     0  3474k      0  0:00:02  0:00:02 --:--:-- 3476k
+#7 DONE 2.3s
 
-#7 [2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
-#7 CACHED
+#8 [5/5] RUN ls -la
+#0 0.098 total 7584
+#0 0.098 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 .
+#0 0.098 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 ..
+#0 0.098 -rw-r--r--    1 root     root       7684915 Apr 13 10:01 babynames.zip
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 bin
+#0 0.098 drwxr-xr-x    5 root     root           340 Apr 13 10:01 dev
+#0 0.098 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 etc
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 home
+#0 0.098 drwxr-xr-x    1 root     root          4096 Apr  4 16:06 lib
+#0 0.098 drwxr-xr-x    5 root     root          4096 Apr  4 16:06 media
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 mnt
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 opt
+#0 0.098 dr-xr-xr-x  212 root     root             0 Apr 13 10:01 proc
+#0 0.098 drwx------    2 root     root          4096 Apr  4 16:06 root
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 run
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 sbin
+#0 0.098 drwxr-xr-x    2 root     root          4096 Apr  4 16:06 srv
+#0 0.098 dr-xr-xr-x   13 root     root             0 Apr 13 08:33 sys
+#8 0.098 drwxrwxrwt    2 root     root          4096 Apr  4 16:06 tmp
+#8 0.098 drwxr-xr-x    1 root     root          4096 Apr  4 16:06 usr
+#8 0.098 drwxr-xr-x    1 root     root          4096 Apr  4 16:06 var
+#8 DONE 0.1s
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
@@ -98,51 +134,115 @@ Building and publishing multi-arch image to DockerHub..
 [Pipeline] sh
 + docker buildx build --push --platform linux/amd64,linux/arm64 -t ****/cotu:latest -f reactjs/Dockerfile .
 #1 [internal] load build definition from Dockerfile
-#1 transferring dockerfile: 537B done
+#1 transferring dockerfile: 648B done
 #1 DONE 0.0s
 
 #2 [internal] load .dockerignore
+#2 transferring context:
 #2 transferring context: 2B done
 #2 DONE 0.0s
 
-#3 [linux/amd64 internal] load metadata for docker.io/library/alpine:latest
-#3 DONE 0.2s
+#3 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
+#3 ...
 
-#4 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
-#4 DONE 0.5s
+#4 [linux/amd64 internal] load metadata for docker.io/library/alpine:latest
+#4 DONE 0.2s
 
-#5 [linux/arm64 1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#3 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 0.5s
+
+#5 [linux/arm64 1/5] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
 #5 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
 #5 DONE 0.0s
 
-#6 [linux/arm64 2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
-#6 CACHED
+#6 [linux/amd64 1/5] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#6 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
+#6 DONE 0.0s
 
-#7 [linux/amd64 1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
-#7 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
-#7 DONE 0.0s
+#7 [linux/arm64 2/5] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#7 CACHED
 
-#8 [linux/amd64 2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#8 [linux/amd64 2/5] RUN echo "Hello, my CPU architecture is $(uname -m)"
 #8 CACHED
 
-#9 exporting to image
-#9 exporting layers done
-#9 exporting manifest sha256:1bf66ecfd85f18f748cb6794bb15b60760607185a75a882e466358ca047736c2 0.0s done
-#9 exporting config sha256:cfb4ecc91b91b29918ef4eeb9cec834eed717a66616cdd7200e3b4169d33ccf2 0.0s done
-#9 exporting manifest sha256:a373c23ed5149f8df7789c620ebedca8a38096c524f4f2e16e2b59ea0d3e93b6 0.0s done
-#9 exporting config sha256:b16f9b59d9a13c1b4c9f6422ae858fbdfca5522735f968eccc7f3c182665a0e8 0.0s done
-#9 exporting manifest list sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2 0.0s done
-#9 pushing layers
-#9 ...
+#9 [linux/amd64 3/5] RUN apk add curl
+#9 CACHED
 
-#10 [auth] ****/cotu:pull,push token for registry-1.docker.io
-#10 DONE 0.0s
+#10 [linux/amd64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#10 CACHED
 
-#9 exporting to image
-#9 pushing layers 0.6s done
-#9 pushing manifest for docker.io/****/cotu:latest@sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2
-#9 pushing manifest for docker.io/****/cotu:latest@sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2 0.3s done
-#9 DONE 1.0s
+#11 [linux/amd64 5/5] RUN ls -la
+#11 CACHED
+
+#12 [linux/arm64 3/5] RUN apk add curl
+#12 0.166 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/aarch64/APKINDEX.tar.gz
+#12 0.783 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/aarch64/APKINDEX.tar.gz
+#12 2.039 (1/5) Installing ca-certificates (20211220-r0)
+#12 2.103 (2/5) Installing brotli-libs (1.0.9-r5)
+#12 2.196 (3/5) Installing nghttp2-libs (1.46.0-r0)
+#12 2.231 (4/5) Installing libcurl (7.80.0-r0)
+#12 2.284 (5/5) Installing curl (7.80.0-r0)
+#12 2.319 Executing busybox-1.34.1-r5.trigger
+#12 2.372 Executing ca-certificates-20211220-r0.trigger
+#12 2.375 Error while loading �//var/cache/misc/ca-certificates-20211220-r0.trigger: No such file or directory
+#12 2.376 ERROR: ca-certificates-20211220-r0.trigger: script exited with error 1
+#12 2.382 OK: 8 MiB in 19 packages
+#12 DONE 2.6s
+
+#13 [linux/arm64 4/5] RUN curl http://stash.compciv.org/ssa_baby_names/names.zip --output babynames.zip
+#13 0.207   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#13 0.209                                  Dload  Upload   Total   Spent    Left  Speed
+#13 0.211 
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+ 59 7504k   59 4458k    0     0  4117k      0  0:00:01  0:00:01 --:--:-- 4246k
+100 7504k  100 7504k    0     0  5293k      0  0:00:01  0:00:01 --:--:-- 5418k
+#13 DONE 1.7s
+
+#14 [linux/arm64 5/5] RUN ls -la
+#14 0.127 total 7584
+#14 0.133 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 .
+#14 0.133 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 ..
+#14 0.133 -rw-r--r--    1 root     root       7684915 Apr 13 10:01 babynames.zip
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:08 bin
+#14 0.133 drwxr-xr-x    5 root     root           360 Apr 13 10:01 dev
+#14 0.133 drwxr-xr-x    1 root     root          4096 Apr 13 10:01 etc
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:07 home
+#14 0.133 drwxr-xr-x    1 root     root          4096 Apr  4 16:07 lib
+#14 0.133 drwxr-xr-x    5 root     root          4096 Apr  4 16:07 media
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:07 mnt
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:07 opt
+#14 0.133 dr-xr-xr-x  214 root     root             0 Apr 13 10:01 proc
+#14 0.133 drwx------    2 root     root          4096 Apr  4 16:07 root
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:07 run
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:08 sbin
+#14 0.133 drwxr-xr-x    2 root     root          4096 Apr  4 16:07 srv
+#14 0.133 dr-xr-xr-x   13 root     root             0 Apr 13 08:33 sys
+#14 0.134 drwxrwxrwt    2 root     root          4096 Apr  4 16:07 tmp
+#14 0.134 drwxr-xr-x    1 root     root          4096 Apr  4 16:07 usr
+#14 0.134 drwxr-xr-x    1 root     root          4096 Apr  4 16:07 var
+#14 DONE 0.2s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.5s done
+#15 exporting manifest sha256:ca8d7f814fc9392ec0e4792385db85c4dc5432eb630093243a920a36e14b0c92 0.0s done
+#15 exporting config sha256:f94cfc3d5afda62f785bb073e2bee1062c665e17efb8abe56bace35ae9f38bc9 0.0s done
+#15 exporting manifest sha256:7c1c2caa68db09ea13636d89842737e96c3d5d481631a8e385b447e4fd3d0398 0.0s done
+#15 exporting config sha256:958bc816031f900c980b141463b960fde553b823d0a96959406f505e11c81cc4
+#15 ...
+
+#16 [auth] ****/cotu:pull,push token for registry-1.docker.io
+#16 DONE 0.0s
+
+#15 exporting to image
+#15 exporting config sha256:958bc816031f900c980b141463b960fde553b823d0a96959406f505e11c81cc4 0.0s done
+#15 exporting manifest list sha256:1c055d4d941d0f09866dcf4a0a7dfe5fc56a7cc85e8066594327b19c616e7952 0.0s done
+#15 pushing layers
+#15 pushing layers 3.3s done
+#15 pushing manifest for docker.io/****/cotu:latest@sha256:1c055d4d941d0f09866dcf4a0a7dfe5fc56a7cc85e8066594327b19c616e7952
+#15 pushing manifest for docker.io/****/cotu:latest@sha256:1c055d4d941d0f09866dcf4a0a7dfe5fc56a7cc85e8066594327b19c616e7952 0.9s done
+#15 DONE 4.7s
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
