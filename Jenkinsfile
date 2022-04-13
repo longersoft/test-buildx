@@ -42,6 +42,8 @@ pipeline {
       }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
+        sh 'docker buildx create --use --name multiarch'
+        sh 'docker buildx inspect --bootstrap'
         sh 'docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest .'
       }
     }
