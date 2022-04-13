@@ -98,11 +98,6 @@ def build2() {
   namespace = "swm"
   
   stage('Build docker') {
-    environment {
-      DOCKER_ID = credentials('DOCKER_ID')
-      DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
-    }
-    
     container('awscli') {
       DOCKER_LOGIN = sh(
         script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
@@ -110,6 +105,11 @@ def build2() {
       ).trim()
     }
     container('docker') {
+      environment {
+        DOCKER_ID = credentials('DOCKER_ID')
+        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+      }
+      
       // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
       REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
       
