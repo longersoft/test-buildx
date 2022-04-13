@@ -126,17 +126,14 @@ def build2() {
           REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
 
           sh 'echo $password | docker login -u $username --password-stdin'
+
+          sh """
+            docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
+            docker buildx inspect --bootstrap
+            docker buildx build --network host --platform linux/amd64,linux/arm64 -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
+          """
         }
       }
-
-      sh """
-        #${DOCKER_LOGIN}
-        docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
-        #docker buildx create --driver docker-container --use
-        docker buildx inspect --bootstrap
-        #update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
-        docker buildx build --network host --platform linux/amd64,linux/arm64 -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
-      """
     }
   }
   // stage('Deploy k8s') {
