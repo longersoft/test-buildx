@@ -105,20 +105,18 @@ def build2() {
     //   ).trim()
     // }
 
-    steps {
-      script {
-        withCredentials([
-          usernamePassword(credentialsId: 'private-artifactory',
-            usernameVariable: 'username',
-            passwordVariable: 'password')
-        ]) {
-          print 'username=' + username + 'password=' + password
+    script {
+      withCredentials([
+        usernamePassword(credentialsId: 'private-artifactory',
+          usernameVariable: 'username',
+          passwordVariable: 'password')
+      ]) {
+        print 'username=' + username + 'password=' + password
 
-          print 'username.collect { it }=' + username.collect { it }
-          print 'password.collect { it }=' + password.collect { it }
+        print 'username.collect { it }=' + username.collect { it }
+        print 'password.collect { it }=' + password.collect { it }
 
-          sh 'echo $password | docker login -u $username --password-stdin'
-        }
+        sh 'echo $password | docker login -u $username --password-stdin'
       }
     }
 
