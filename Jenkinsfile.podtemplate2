@@ -1,7 +1,7 @@
 podTemplate(
   label: 'arm-pod', 
   containers: [
-    containerTemplate(name: 'docker', image: 'ezkrg/buildx:v0.8.1', command: 'RUN --network=none ip a', ttyEnabled: true),
+    containerTemplate(name: 'docker', image: 'ezkrg/buildx:v0.8.1', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'public.ecr.aws/smartlog/roffe/kubectl:v1.13.2', command: 'cat', ttyEnabled: true), 
     containerTemplate(name: 'awscli', image: 'public.ecr.aws/smartlog/atlassian/pipelines-awscli:1.18.190', command: 'cat', ttyEnabled: true), 
   ], 
