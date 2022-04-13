@@ -104,14 +104,21 @@ def build2() {
         returnStdout: true
       ).trim()
     }
-    withCredentials([usernamePassword(credentialsId: 'private-artifactory', passwordVariable: 'dockerKey', usernameVariable: 'dockerUser')]) {
-      // avoid using credentials in groovy string interpolation
-      sh label: 'Login to docker registry', script: '''docker login --username $dockerUser --password $dockerKey ''' + my-artifactory.intranet
+    stage('usernamePassword') {
+      steps {
+        script {
+          withCredentials([
+            usernamePassword(credentialsId: 'gitlab',
+              usernameVariable: 'username',
+              passwordVariable: 'password')
+          ]) {
+            print 'username=' + username + 'password=' + password
 
-      // do something while being logged in
-      sh label: 'Logout from docker registry', script: '''
-        docker logout my-artifactory.intranet
-      '''
+            print 'username.collect { it }=' + username.collect { it }
+            print 'password.collect { it }=' + password.collect { it }
+          }
+        }
+      }
     }
     container('docker') {
       // DOCKER_ID = credentials('DOCKER_ID')
