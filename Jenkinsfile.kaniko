@@ -25,10 +25,11 @@ pipeline {
         sh 'pwd'
         sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/'
         sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/reactjs/'
+        sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
         sh """
           docker run \
             -v "$HOME"/.config/gcloud:/root/.config/gcloud \
-            -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
+            -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile:/workspace/ \
             gcr.io/kaniko-project/executor:latest \
             --dockerfile /workspace/Dockerfile \
             --destination "$DOCKER_ID/cotu-kaniko:latest" \
