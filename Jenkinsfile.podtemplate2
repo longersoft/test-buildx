@@ -105,21 +105,6 @@ def build2() {
     //   ).trim()
     // }
 
-    script {
-      withCredentials([
-        usernamePassword(credentialsId: 'private-artifactory',
-          usernameVariable: 'username',
-          passwordVariable: 'password')
-      ]) {
-        print 'username=' + username + 'password=' + password
-
-        print 'username.collect { it }=' + username.collect { it }
-        print 'password.collect { it }=' + password.collect { it }
-
-        sh 'echo $password | docker login -u $username --password-stdin'
-      }
-    }
-
     container('docker') {
       // DOCKER_ID = credentials('DOCKER_ID')
       // DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
@@ -130,6 +115,18 @@ def build2() {
       // withCredentials([usernamePassword(passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_ID')]) {
       //   sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
       // }
+
+      script {
+        withCredentials([
+          usernamePassword(credentialsId: 'private-artifactory',
+            usernameVariable: 'username',
+            passwordVariable: 'password')
+        ]) {
+          print 'username=' + username + 'password=' + password
+
+          sh 'echo $password | docker login -u $username --password-stdin'
+        }
+      }
 
       sh """
         #${DOCKER_LOGIN}
