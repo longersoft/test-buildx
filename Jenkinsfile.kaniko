@@ -30,7 +30,7 @@ pipeline {
           cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
           docker run --rm \
             -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
-            gcr.io/kaniko-project/executor:latest \
+            csanchez/kaniko \
             --dockerfile=Dockerfile \
             --destination=$DOCKER_ID/cotu-kaniko:latest
         """
