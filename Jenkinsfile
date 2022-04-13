@@ -25,13 +25,13 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building image..'
-        sh 'docker buildx build -t $DOCKER_ID/cotu:latest .'
+        sh 'docker buildx build -t $DOCKER_ID/cotu:latest -f reactjs/Dockerfile .'
       }
     }
     stage('Test') {
       steps {
         echo 'Testing..'
-        sh 'docker run --rm -e CI=true $DOCKER_ID/cotu pytest'
+        // sh 'docker run --rm -e CI=true $DOCKER_ID/cotu pytest'
       }
     }
     stage('Publish') {
@@ -42,7 +42,7 @@ pipeline {
       // }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
-        sh 'docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest .'
+        sh 'docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest reactjs/Dockerfile .'
       }
     }
     stage('Cleanup') {
