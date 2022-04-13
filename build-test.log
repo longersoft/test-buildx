@@ -1,0 +1,161 @@
+Started by user Admin
+Obtained Jenkinsfile from git https://github.com/longersoft/test-buildx.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/longvu-test-buildx
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/longvu-test-buildx/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/longersoft/test-buildx.git # timeout=10
+Fetching upstream changes from https://github.com/longersoft/test-buildx.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.30.2'
+ > git fetch --tags --force --progress -- https://github.com/longersoft/test-buildx.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision a077473a104dd213e9ca80a4a2434959f549e415 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f a077473a104dd213e9ca80a4a2434959f549e415 # timeout=10
+Commit message: "test"
+ > git rev-list --no-walk af4846cd88ca191fab46571820a301505adbc96b # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_ID or $DOCKER_PASSWORD
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Init)
+[Pipeline] echo
+Initializing..
+[Pipeline] echo
+Running 24 on http://54.191.50.38:8080/
+[Pipeline] echo
+Current branch: null
+[Pipeline] sh
++ echo ****
++ docker login -u **** --password-stdin
+WARNING! Your password will be stored unencrypted in /var/jenkins_home/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] echo
+Building image..
+[Pipeline] sh
++ docker buildx build -t ****/cotu:latest -f reactjs/Dockerfile .
+WARNING: No output specified for docker-container driver. Build result will only remain in the build cache. To push result image into registry use --push or to load image into docker use --load
+#1 [internal] booting buildkit
+#1 starting container buildx_buildkit_multiarch0
+#1 starting container buildx_buildkit_multiarch0 0.6s done
+#1 DONE 0.6s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 537B done
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#4 ...
+
+#5 [auth] library/alpine:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#4 DONE 1.0s
+
+#6 [1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#6 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
+#6 DONE 0.0s
+
+#7 [2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#7 CACHED
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] echo
+Testing..
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] echo
+Building and publishing multi-arch image to DockerHub..
+[Pipeline] sh
++ docker buildx build --push --platform linux/amd64,linux/arm64 -t ****/cotu:latest -f reactjs/Dockerfile .
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 537B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [linux/amd64 internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 0.2s
+
+#4 [linux/arm64 internal] load metadata for docker.io/library/alpine:latest
+#4 DONE 0.5s
+
+#5 [linux/arm64 1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#5 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
+#5 DONE 0.0s
+
+#6 [linux/arm64 2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#6 CACHED
+
+#7 [linux/amd64 1/2] FROM docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+#7 resolve docker.io/library/alpine@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 0.0s done
+#7 DONE 0.0s
+
+#8 [linux/amd64 2/2] RUN echo "Hello, my CPU architecture is $(uname -m)"
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 exporting manifest sha256:1bf66ecfd85f18f748cb6794bb15b60760607185a75a882e466358ca047736c2 0.0s done
+#9 exporting config sha256:cfb4ecc91b91b29918ef4eeb9cec834eed717a66616cdd7200e3b4169d33ccf2 0.0s done
+#9 exporting manifest sha256:a373c23ed5149f8df7789c620ebedca8a38096c524f4f2e16e2b59ea0d3e93b6 0.0s done
+#9 exporting config sha256:b16f9b59d9a13c1b4c9f6422ae858fbdfca5522735f968eccc7f3c182665a0e8 0.0s done
+#9 exporting manifest list sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2 0.0s done
+#9 pushing layers
+#9 ...
+
+#10 [auth] ****/cotu:pull,push token for registry-1.docker.io
+#10 DONE 0.0s
+
+#9 exporting to image
+#9 pushing layers 0.6s done
+#9 pushing manifest for docker.io/****/cotu:latest@sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2
+#9 pushing manifest for docker.io/****/cotu:latest@sha256:6a30acf5986c5ab5483e016cfdc647a6bf4fb6769eefdc2d97a2bbe871233aa2 0.3s done
+#9 DONE 1.0s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Cleanup)
+[Pipeline] echo
+Removing unused docker containers and images..
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

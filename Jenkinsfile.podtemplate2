@@ -98,30 +98,30 @@ def build2() {
   namespace = "swm"
   
   stage('Build docker') {
-    container('awscli') {
-      DOCKER_LOGIN = sh(
-        script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
-        returnStdout: true
-      ).trim()
-    }
-    stage('usernamePassword') {
-      steps {
-        script {
-          withCredentials([
-            usernamePassword(credentialsId: 'private-artifactory',
-              usernameVariable: 'username',
-              passwordVariable: 'password')
-          ]) {
-            print 'username=' + username + 'password=' + password
+    // container('awscli') {
+    //   DOCKER_LOGIN = sh(
+    //     script: 'aws ecr get-login --no-include-email --region ap-southeast-1',
+    //     returnStdout: true
+    //   ).trim()
+    // }
 
-            print 'username.collect { it }=' + username.collect { it }
-            print 'password.collect { it }=' + password.collect { it }
+    steps {
+      script {
+        withCredentials([
+          usernamePassword(credentialsId: 'private-artifactory',
+            usernameVariable: 'username',
+            passwordVariable: 'password')
+        ]) {
+          print 'username=' + username + 'password=' + password
 
-            sh 'echo $password | docker login -u $username --password-stdin'
-          }
+          print 'username.collect { it }=' + username.collect { it }
+          print 'password.collect { it }=' + password.collect { it }
+
+          sh 'echo $password | docker login -u $username --password-stdin'
         }
       }
     }
+
     container('docker') {
       // DOCKER_ID = credentials('DOCKER_ID')
       // DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
