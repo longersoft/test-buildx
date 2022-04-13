@@ -10,12 +10,12 @@ podTemplate(
   node('arm-pod') {
     SLACK_CHANNEL = 'GUCB1RHAT' // cma-no-bosscommitMessage = ""
     try {
-      stage('Get source code') {
-        echo 'Getting source code...'
-        checkout scmString[]
-        parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n')
-        commitMessage = parts[0]
-      }
+      // stage('Get source code') {
+      //   echo 'Getting source code...'
+      //   checkout scmString[]
+      //   parts = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim().split('\n')
+      //   commitMessage = parts[0]
+      // }
       // if (env.BRANCH_NAME == 'hung') {
       //   envName = 'stage'
       //   deployEnvs = ['stage'] build2()
