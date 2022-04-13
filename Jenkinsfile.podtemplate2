@@ -18,6 +18,7 @@ podTemplate(
           git([url: 'https://github.com/longersoft/test-buildx.git', branch: 'main'])
         }
       }
+      
       // stage('Get source code') {
       //   echo 'Getting source code...'
       //   checkout scmString[]
