@@ -1,5 +1,10 @@
 # build stage
 FROM --platform=$TARGETPLATFORM node:13-alpine as build-stage
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
+
 WORKDIR /app
 COPY reactjs .
 RUN npm install
