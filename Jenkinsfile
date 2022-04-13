@@ -35,11 +35,11 @@ pipeline {
       }
     }
     stage('Publish') {
-      agent {
-        docker {
-          image 'ezkrg/buildx:v0.8.1'
-        }
-      }
+      // agent {
+      //   docker {
+      //     image 'ezkrg/buildx:v0.8.1'
+      //   }
+      // }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
         sh 'docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest .'
