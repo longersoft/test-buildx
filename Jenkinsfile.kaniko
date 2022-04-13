@@ -28,7 +28,7 @@ pipeline {
         sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
         sh """
           cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
-          docker run -ti --rm \
+          docker run --rm \
             -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
             gcr.io/kaniko-project/executor:latest \
             --dockerfile=Dockerfile \
