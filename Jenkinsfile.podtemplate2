@@ -108,7 +108,7 @@ def build2() {
       sh """
         ${DOCKER_LOGIN}
         docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
-        docker buildx create --driver docker-container --use
+        #docker buildx create --driver docker-container --use
         docker buildx inspect --bootstrap
         #update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
         docker buildx build --network host --platform linux/amd64,linux/arm64,local -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
