@@ -111,7 +111,7 @@ def build2() {
         #docker buildx create --driver docker-container --use
         docker buildx inspect --bootstrap
         #update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
-        docker buildx build --network host --platform linux/amd64,linux/arm64,local -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
+        docker buildx build --network host --platform linux/amd64,linux/arm64 -t ${REGISTRY_URL} --allow network.host --push --pull=true -f reactjs/Dockerfile .
       """
     }
   }
