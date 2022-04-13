@@ -28,11 +28,10 @@ pipeline {
         sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
         sh """
           cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
-          docker run --rm \
+          docker run \
             -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
-            csanchez/kaniko \
-            --dockerfile=Dockerfile \
-            --destination=$DOCKER_ID/cotu-kaniko:latest
+            gcr.io/kaniko-project/executor:v1.0.0 \
+            --no-push
         """
       }
     }
