@@ -1,0 +1,60 @@
+pipeline {
+  agent none
+
+  // agent {
+  //   docker { 
+  //     image 'gcr.io/kaniko-project/executor:latest'
+  //     // args '-v /var/run/docker.sock:/var/run/docker.sock'
+  //   }
+  // }
+
+  environment {
+    DOCKER_ID = credentials('DOCKER_ID')
+    DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+    WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko/"
+    CI_REGISTRY="https://index.docker.io/v1/"
+    P_IMAGE=""
+    L_IMAGE=""
+  }
+
+  stages {
+    
+    stage('Build') {
+      agent {
+        label 'buildah-slave'
+      }
+
+      steps {
+        echo 'Building image..'
+
+        // Registry..
+        echo "Expecting registry at ${CI_REGISTRY}"
+        echo "Expecting registry user ${DOCKER_ID}"
+
+        // Expose tool versions...
+        sh 'buildah -v'
+        sh 'podman -v'
+        sh 'skopeo -v'
+
+        // Build...
+        // (Small image first)
+        sh "buildah bud --format docker -f Dockerfile-sdposter -t ${P_IMAGE} ."
+        sh "buildah bud --format docker -f Dockerfile-rdkit -t ${L_IMAGE} ."
+
+        // Deploy...
+        // Get user login token
+        script {
+          TOKEN = sh(script: 'oc whoami -t', returnStdout: true).trim()
+        }
+
+        // Login to the target registry, push images and logout
+        sh "echo $TOKEN"
+        sh "podman login --tls-verify=false --username ${DOCKER_ID} --password ${DOCKER_PASSWORD} ${CI_REGISTRY}"
+        sh "buildah push --tls-verify=false ${P_IMAGE} docker://${CI_REGISTRY}/${P_IMAGE}"
+        sh "buildah push --tls-verify=false ${L_IMAGE} docker://${CI_REGISTRY}/${L_IMAGE}"
+        sh "podman logout ${CI_REGISTRY}"
+      }
+    }
+
+  }
+}
