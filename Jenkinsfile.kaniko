@@ -8,6 +8,7 @@ pipeline {
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+    WORK_DIR = `pwd`
   }
 
   stages {
@@ -22,10 +23,10 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building image..'
-        sh 'pwd'
-        sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/'
-        sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/reactjs/'
-        sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
+        // sh 'pwd'
+        // sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/'
+        // sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/reactjs/'
+        // sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
         // sh """
         //   cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
         //   docker run \
@@ -36,7 +37,6 @@ pipeline {
         sh 'pwd'
         sh 'ls -la'
         sh """
-          WORK_DIR=`pwd`
           echo $WORK_DIR
           bash ./run_in_docker.sh /workspace/Dockerfile $WORK_DIR/ $DOCKER_ID/cotu-kaniko:latest
         """
