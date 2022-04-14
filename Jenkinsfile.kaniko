@@ -38,7 +38,7 @@ pipeline {
         sh 'ls -la'
         sh """
           echo $WORK_DIR
-          bash ./run_in_docker.sh /workspace/Dockerfile $WORK_DIR $DOCKER_ID/cotu-kaniko:latest
+          bash ./run_in_docker.sh /Dockerfile $WORK_DIR $DOCKER_ID/cotu-kaniko:latest
         """
       }
     }
