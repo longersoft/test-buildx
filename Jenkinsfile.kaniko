@@ -9,6 +9,7 @@ pipeline {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
     WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko/"
+    CI_REGISTRY="https://index.docker.io/v1/"
   }
 
   stages {
