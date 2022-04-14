@@ -35,7 +35,11 @@ pipeline {
         // """
         sh 'pwd'
         sh 'ls -la'
-        sh "bash ./run_in_docker.sh /workspace/Dockerfile $PWD/ $DOCKER_ID/cotu-kaniko:latest"
+        sh """
+          WORK_DIR=`pwd`
+          echo $WORK_DIR
+          bash ./run_in_docker.sh /workspace/Dockerfile $WORK_DIR/ $DOCKER_ID/cotu-kaniko:latest
+        """
       }
     }
     stage('Test') {
