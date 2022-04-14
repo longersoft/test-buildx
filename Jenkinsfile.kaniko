@@ -37,8 +37,17 @@ pipeline {
         sh 'pwd'
         sh 'ls -la'
         sh """
-          echo $WORK_DIR
-          bash ./run_in_docker.sh /Dockerfile $WORK_DIR $DOCKER_ID/cotu-kaniko:latest
+          docker build -t kaniko-executor -f Dockerfile.kaniko .
+          docker rm kaniko-executor
+          docker run --rm --name=kaniko-executor -v $(PWD):/workspace kaniko-executor --customPlatform=linux/arm64 --destination longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
+          docker run --rm --name=kaniko-executor -v $(PWD):/workspace kaniko-executor --customPlatform=linux/amd64 --destination longersoft/kaniko-multi-arch-amd64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-amd64.tar
+
+          docker rmi -f longersoft/kaniko-multi-arch-arm64:latest
+          docker load < file-kaniko-multi-arch-arm64.tar
+          docker rmi -f longersoft/kaniko-multi-arch-amd64:latest
+          docker load < file-kaniko-multi-arch-amd64.tar
+
+          docker images
         """
       }
     }
@@ -56,7 +65,14 @@ pipeline {
       // }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
-        sh 'docker push $DOCKER_ID/cotu-kaniko:latest'
+        sh """
+          docker push longersoft/kaniko-multi-arch-arm64:latest
+          docker push longersoft/kaniko-multi-arch-amd64:latest
+          docker manifest create longersoft/kaniko-multi-arch:latest \
+            --amend longersoft/kaniko-multi-arch-arm64:latest \
+            --amend longersoft/kaniko-multi-arch-amd64:latest
+          docker manifest push longersoft/kaniko-multi-arch:latest
+        """
       }
     }
     stage('Cleanup') {

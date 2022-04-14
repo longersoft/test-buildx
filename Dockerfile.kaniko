@@ -1,0 +1,16 @@
+FROM gcr.io/kaniko-project/executor:latest
+
+COPY ./kaniko /
+#/root/.docker/config.json
+COPY ./kaniko/.docker /root/
+COPY ./kaniko/.docker/config.json /root/.docker/config.json
+COPY ./kaniko/.docker/config.json /home/root/.docker/config.json
+
+WORKDIR /workspace
+
+COPY Dockerfile .
+
+# ENTRYPOINT [""]
+# CMD ""
+
+# STOPSIGNAL SIGQUIT
