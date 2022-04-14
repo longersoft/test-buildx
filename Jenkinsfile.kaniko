@@ -8,7 +8,7 @@ pipeline {
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
-    WORK_DIR = `pwd`
+    WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko/"
   }
 
   stages {
@@ -38,7 +38,7 @@ pipeline {
         sh 'ls -la'
         sh """
           echo $WORK_DIR
-          bash ./run_in_docker.sh /workspace/Dockerfile $WORK_DIR/ $DOCKER_ID/cotu-kaniko:latest
+          bash ./run_in_docker.sh /workspace/Dockerfile $WORK_DIR $DOCKER_ID/cotu-kaniko:latest
         """
       }
     }
