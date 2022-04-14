@@ -8,7 +8,7 @@ pipeline {
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
-    WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko"
+    WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko/"
     CI_REGISTRY="https://index.docker.io/v1/"
   }
 
@@ -41,8 +41,8 @@ pipeline {
           docker build -t kaniko-executor -f Dockerfile.kaniko .
           docker images
 
-          docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace gcr.io/kaniko-project/executor:debug --customPlatform=linux/arm64 --dockerfile=Dockerfile --destination=longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
-          docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace kaniko-executor --customPlatform=linux/amd64 --destination longersoft/kaniko-multi-arch-amd64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-amd64.tar
+          docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace/ kaniko-executor:latest --customPlatform=linux/arm64 --dockerfile=Dockerfile --destination=longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
+          docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace/ kaniko-executor --customPlatform=linux/amd64 --destination longersoft/kaniko-multi-arch-amd64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-amd64.tar
 
           ls -la
           docker rmi -f longersoft/kaniko-multi-arch-arm64:latest
