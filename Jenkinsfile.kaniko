@@ -26,13 +26,16 @@ pipeline {
         sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/'
         sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/reactjs/'
         sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
-        sh """
-          cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
-          docker run \
-            -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
-            gcr.io/kaniko-project/executor:v1.0.0 \
-            --destination $DOCKER_ID/cotu-kaniko:latest
-        """
+        // sh """
+        //   cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
+        //   docker run \
+        //     -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
+        //     gcr.io/kaniko-project/executor:latest \
+        //     --destination $DOCKER_ID/cotu-kaniko:latest
+        // """
+        sh 'pwd'
+        sh 'ls -la'
+        sh "./run_in_docker.sh /workspace/Dockerfile ./ $DOCKER_ID/cotu-kaniko:latest"
       }
     }
     stage('Test') {
