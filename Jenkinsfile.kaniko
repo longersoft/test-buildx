@@ -3,7 +3,7 @@ pipeline {
 
   // agent {
   //   docker { 
-  //     image 'docker:latest'
+  //     image 'gcr.io/kaniko-project/executor:latest'
   //     // args '-v /var/run/docker.sock:/var/run/docker.sock'
   //   }
   // }
@@ -44,7 +44,8 @@ pipeline {
           docker build -t kaniko-executor -f Dockerfile.kaniko .
           docker images
 
-          docker run --rm --name=kaniko-executor kaniko-executor:latest --customPlatform=linux/arm64 --force --dockerfile=Dockerfile --destination=longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
+          #docker run --rm --name=kaniko-executor kaniko-executor:latest --customPlatform=linux/arm64 --force --dockerfile=Dockerfile --destination=longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
+          docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace/ kaniko-executor --customPlatform=linux/arm64 --destination=longersoft/kaniko-multi-arch-arm64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-arm64.tar
           docker run --rm --name=kaniko-executor -v $WORK_DIR:/workspace/ kaniko-executor --customPlatform=linux/amd64 --destination longersoft/kaniko-multi-arch-amd64:latest --no-push --tarPath=/workspace/file-kaniko-multi-arch-amd64.tar
 
           ls -la
