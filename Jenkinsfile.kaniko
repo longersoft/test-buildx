@@ -35,7 +35,7 @@ pipeline {
         // """
         sh 'pwd'
         sh 'ls -la'
-        sh "./run_in_docker.sh /workspace/Dockerfile ./ $DOCKER_ID/cotu-kaniko:latest"
+        sh "sh ./run_in_docker.sh /workspace/Dockerfile ./ $DOCKER_ID/cotu-kaniko:latest"
       }
     }
     stage('Test') {
